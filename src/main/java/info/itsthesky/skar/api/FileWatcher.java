@@ -38,7 +38,7 @@ public class FileWatcher extends Thread {
                 ScriptLoader.reloadScript(file);
                 Bukkit.getScheduler().runTaskLater(Skar.getInstance(),
                         () -> shouldExecute.set(true),
-                        5);
+                        2);
             }
         });
     }
