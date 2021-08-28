@@ -1,0 +1,13 @@
+name: Skar
+version: @version@
+main: info.itsthesky.skar.Skar
+api-version: 1.16
+prefix: Skar
+softdepend: [ Skript ]
+authors: [ ItsTheSky, Trason ]
+description: Plugin for script file auto-reload
+commands:
+    skar:
+        permission: skar.command
+        aliases:
+            - skautoreload

@@ -1,0 +1,41 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+}
+
+group = 'info.itsthesky'
+version = '1.0'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = 'https://oss.sonatype.org/content/groups/public/'  }
+    maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    implementation (group: 'com.github.SkriptLang', name: 'Skript', version: '2.5.3') {
+        exclude group: 'com.sk89q.worldguard', module: 'worldguard-legacy'
+        exclude group: 'net.milkbowl.vault', module: 'Vault'
+    }
+    compile 'com.github.simplix-softworks:simplixstorage:3.2.2'
+}
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+compileJava.options.encoding = 'UTF-8'
