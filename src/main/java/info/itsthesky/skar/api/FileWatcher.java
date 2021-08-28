@@ -36,8 +36,10 @@ public class FileWatcher extends Thread {
 
             if (shouldExecute.get()) {
                 shouldExecute.set(false);
+                Skar.log("Reloading Script file " + file.getPath() +" ...");
                 Skar.debug("File changed: " + file.getPath());
                 ScriptLoader.reloadScript(file);
+                Skar.success("Reload success! Check above if there's any Skript error.");
                 Bukkit.getScheduler().runTaskLater(Skar.getInstance(),
                         () -> shouldExecute.set(true),
                         1);
