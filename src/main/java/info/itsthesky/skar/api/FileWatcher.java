@@ -14,8 +14,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileWatcher extends Thread {
     private final File file;
-    private AtomicBoolean stop = new AtomicBoolean(false);
-    private AtomicBoolean shouldExecute = new AtomicBoolean(true);
+    private final AtomicBoolean stop = new AtomicBoolean(false);
+    private final AtomicBoolean shouldExecute = new AtomicBoolean(true);
 
     public FileWatcher(File file) {
         this.file = file;
@@ -26,6 +26,8 @@ public class FileWatcher extends Thread {
 
     public void doOnChange(File file) {
         Utils.sync(() -> {
+
+            if (file.length() <= 0) return;
 
             // We create the Skar file datas through the script file
             final SkarFile skar = new SkarFile(SkarFile.getConfigFileFromScript(file));
@@ -38,7 +40,7 @@ public class FileWatcher extends Thread {
                 ScriptLoader.reloadScript(file);
                 Bukkit.getScheduler().runTaskLater(Skar.getInstance(),
                         () -> shouldExecute.set(true),
-                        2);
+                        1);
             }
         });
     }
@@ -64,7 +66,7 @@ public class FileWatcher extends Thread {
                     if (kind == StandardWatchEventKinds.OVERFLOW) {
                         Thread.yield();
                         continue;
-                    } else if (kind == java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
+                    } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY
                             && filename.toString().equals(file.getName())) {
                             doOnChange(file);
                     } else if (kind == StandardWatchEventKinds.ENTRY_DELETE
