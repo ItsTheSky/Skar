@@ -146,7 +146,8 @@ public class SkarCommand implements CommandExecutor {
         txts.add(Utils.colored("&6│ &0&m----------&a&l&nServer Information&0&m----------"));
         txts.add(Utils.colored("&6│ &f&lServer Version: &a&l" + Skar.getInstance().getServer().getVersion()));
         txts.add(Utils.colored("&6│ &f&lBukkit Version: &a&l" + Skar.getInstance().getServer().getBukkitVersion()));
-        txts.add(Utils.colored("&6│ &f&lCountry: &a&l" + Utils.getServerCountry()));
+        if (Utils.getServerCountry() != null)
+            txts.add(Utils.colored("&6│ &f&lCountry: &a&l" + Utils.getServerCountry()));
         txts.add(Utils.colored("&6│ "));
 
         txts.add(Utils.colored("&6│ &0&m----------&a&l&nPlugins Information (&2&l&n"+manager.getPlugins().length+"&a&l&n)&0&m----------"));
@@ -160,10 +161,6 @@ public class SkarCommand implements CommandExecutor {
         txts.add(Utils.colored("&6│    &fMax Memory: &a" + Utils.rounded(Runtime.getRuntime().maxMemory()/1000000) + " &fMB"));
         txts.add(Utils.colored("&6│ "));
 
-        txts.add(Utils.colored("&6│ &0&m----------&a&l&nCPU Information &0&m----------"));
-        txts.add(Utils.colored("&6│    &fCPU Core: &a" + ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors()));
-        txts.add(Utils.colored("&6│    &fCPU Usage: &a" + Utils.rounded(ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage() * 100) + " &f%"));
-        txts.add(Utils.colored("&6│ "));
 
         txts.add(Utils.colored("&6│ &0&m----------&a&l&nSkar File(s) (&2&l&n"+ SkarManager.getMemoriesFiles().size() +"&a&l&n) &0&m----------"));
         txts.add(Utils.colored("&6│    &f&lEnabled (&2"+SkarManager.getAutoReload(true).size()+"&f)"));

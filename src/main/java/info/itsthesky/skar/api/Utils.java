@@ -54,7 +54,7 @@ public final class Utils {
         try {
             return result.split("\"country\": \"")[1].split("\",")[0];
         } catch (Exception ex) {
-            return "Can't load";
+            return null;
         }
     }
 
