@@ -4,6 +4,7 @@ import info.itsthesky.skar.Skar;
 import info.itsthesky.skar.api.SkarFile;
 import info.itsthesky.skar.api.SkarManager;
 import info.itsthesky.skar.api.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,9 +16,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SkarCommand implements CommandExecutor {
     @Override
@@ -151,7 +151,7 @@ public class SkarCommand implements CommandExecutor {
         txts.add(Utils.colored("&6│ "));
 
         txts.add(Utils.colored("&6│ &0&m----------&a&l&nPlugins Information (&2&l&n"+manager.getPlugins().length+"&a&l&n)&0&m----------"));
-        for (Plugin pl : manager.getPlugins())
+        for (Plugin pl : Arrays.stream(manager.getPlugins()).map(Plugin::getName).sorted().map(name -> Bukkit.getServer().getPluginManager().getPlugin(name)).collect(Collectors.toList()))
             txts.add(Utils.colored("&6│   &2- &a" + pl.getName() + " (&2v"+pl.getDescription().getVersion()+"&a)"));
         txts.add(Utils.colored("&6│ "));
 
@@ -161,19 +161,22 @@ public class SkarCommand implements CommandExecutor {
         txts.add(Utils.colored("&6│    &fMax Memory: &a" + Utils.rounded(Runtime.getRuntime().maxMemory()/1000000) + " &fMB"));
         txts.add(Utils.colored("&6│ "));
 
-
         txts.add(Utils.colored("&6│ &0&m----------&a&l&nSkar File(s) (&2&l&n"+ SkarManager.getMemoriesFiles().size() +"&a&l&n) &0&m----------"));
         txts.add(Utils.colored("&6│    &f&lEnabled (&2"+SkarManager.getAutoReload(true).size()+"&f)"));
         if (SkarManager.getAutoReload(true).size() == 0)
             txts.add(Utils.colored("&6│       &cNone"));
-        for (SkarFile file : SkarManager.getAutoReload(true))
+        final List<SkarFile> enabledFiles = SkarManager.getAutoReload(true);
+        enabledFiles.sort(Comparator.comparing(SkarFile::getName));
+        for (SkarFile file : enabledFiles)
             txts.add(Utils.colored("&6│       &2- &a" + file.getName() + " (&2"+file.getScriptName()+"&a)"));
 
         txts.add(Utils.colored("&6│ "));
         txts.add(Utils.colored("&6│    &f&lDisabled (&2"+SkarManager.getAutoReload(false).size()+"&f)"));
         if (SkarManager.getAutoReload(false).size() == 0)
             txts.add(Utils.colored("&6│       &cNone"));
-        for (SkarFile file : SkarManager.getAutoReload(false))
+        final List<SkarFile> disabledFiles = SkarManager.getAutoReload(false);
+        disabledFiles.sort(Comparator.comparing(SkarFile::getName));
+        for (SkarFile file : disabledFiles)
             txts.add(Utils.colored("&6│       &2- &a" + file.getName() + " (&2"+file.getScriptName()+"&a)"));
 
         txts.add(Utils.colored("&6│ "));
